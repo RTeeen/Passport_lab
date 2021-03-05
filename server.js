@@ -25,6 +25,7 @@ const passport = require("./middleware/passport");
 const authRoute = require("./routes/authRoute");
 const indexRoute = require("./routes/indexRoute");
 
+
 // Middleware for express
 app.use(express.json());
 app.use(expressLayouts);
@@ -46,6 +47,11 @@ app.use((req, res, next) => {
 
 app.use("/", indexRoute);
 app.use("/auth", authRoute);
+
+app.get("/admin",function(req,res){
+
+  
+});
 
 app.listen(port, () => {
   console.log(`🚀 Server has started on port ${port}`);

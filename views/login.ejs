@@ -1,3 +1,14 @@
+<style>
+  .GitHubAuth{
+    color: white;
+    text-decoration: none;
+  }
+  .GitHubAuth:hover{
+    color: black;
+    text-decoration: none;
+  }
+  </style>
+
 <div class="row mt-5">
   <div class="col-md-6 m-auto">
     <div class="card card-body text-center">
@@ -27,6 +38,9 @@
           />
         </div>
         <button type="submit" class="btn btn-primary btn-block">Login</button>
+        <br>
+        <p>OR</p>
+        <button type="button" class="btn btn-primary btn-block"><a class= "GitHubAuth" href="/auth/github">Login with GitHub</a></button>
       </form>
       <p class="mt-4">New User? <a href="/auth/register">Register</a></p>
       <p>Forgot Password? <a href="/auth/forgot">Reset</a></p>
