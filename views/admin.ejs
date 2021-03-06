@@ -1,3 +1,52 @@
-<h1 class="mt-4">Dashboard</h1>
+<style>
+.sessions{
+    padding: 10px;
+    margin-bottom: 15px;
+    border: solid 2px black;
+}
+.box{
+    border-bottom: dotted 1px red;
+}
+
+#revoke{
+    margin-bottom: 5px;
+    background-color: red;
+    max-width: 150px;
+}
+
+</style>
+<script>
+    $(function() {
+  $("#employeeLink").on("click",function(e) {
+    e.preventDefault(); // cancel the link itself
+    $.post(this.href,function(data) {
+      $("#someContainer").html(data);
+    });
+  });
+});
+</script>
+
+<h1 class="mt-4">Admin Dashboard</h1>
 <p class="lead mb-3">Welcome <%= user.name %></p>
+
+<p>Your Active Sessions:</p>
+<br>
+<div class="sessions">
+
+   <% for(let sid in sessionList.sessions){ %>
+        <% let ses = JSON.parse(sessionList.sessions[sid]); %>   
+    <div class="box">
+        <p>  User ID: <%= ses.passport.user %></p>
+        <p>  session ID: <%= sid %></p>
+
+        <form method="GET" action="/revoke">
+            <input type="hidden" name="sid" value="<%=sid%>">
+            <button type="submit" id= "revoke" class="btn btn-primary btn-block">Revoke session</button> 
+          </form>
+
+    </div>
+<%}%>
+  
+
+</div>
 <a href="/auth/logout" class="btn btn-secondary">Logout</a>

@@ -3,6 +3,7 @@ const passport = require("../middleware/passport");
 const { forwardAuthenticated } = require("../middleware/checkAuth");
 const GitHubStrategy = require('passport-github2').Strategy;
 const userModel = require("../models/userModel");
+const userController = require("../controllers/userController");
 
 var GITHUB_CLIENT_ID = "8c5245a240678035a9e0";
 var GITHUB_CLIENT_SECRET = "7196ffd4cf365188aeb83565174217990d1f7f7c";
@@ -54,10 +55,18 @@ router.get("/login", forwardAuthenticated, (req, res) => res.render("login"));
 
 router.post(
   "/login",
-  passport.authenticate("local", {
-    successRedirect: "/dashboard",
-    failureRedirect: "/auth/login",
-  })
+  passport.authenticate("local", { failureRedirect: '/login' }),
+  function(req, res) {
+    req.session.save(function(err) {
+      console.log('saved?!');
+      if(userController.checkAdmin(req.body.email,req.body.password) == "true"){
+        res.redirect('/admin');
+      }else if(userController.checkAdmin(req.body.email,req.body.password) == "false"){
+        res.redirect('/dashboard');
+      }
+    });
+    
+  }
 );
 router.get('/github', passport.authenticate('github', { scope: [ 'user:email' ] }));
 
@@ -69,7 +78,11 @@ router.get("/logout", (req, res) => {
 router.get('/gitcallback', 
 passport.authenticate('github', { failureRedirect: '/login' }),
 function(req, res) {
-  res.redirect('/dashboard');
+  req.session.save(function(err) {
+    console.log('saved?!');
+    res.redirect('/dashboard');
+  });
+  
 });
 
 

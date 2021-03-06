@@ -9,6 +9,14 @@ const getUserByEmailIdAndPassword = (email, password) => {
   }
   return null;
 };
+const checkAdmin = (email, password) => {
+  let user = userModel.findOne(email);
+  if (user) {
+    if (isUserValid(user, password)) {
+      return user.site_admin;
+    }
+  }
+};
 const getUserById = (id) => {
   let user = userModel.findById(id);
   if (user) {
@@ -24,4 +32,5 @@ function isUserValid(user, password) {
 module.exports = {
   getUserByEmailIdAndPassword,
   getUserById,
+  checkAdmin
 };
