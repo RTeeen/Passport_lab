@@ -13,16 +13,15 @@ router.get("/dashboard", ensureAuthenticated, (req, res) => {
     user: req.user,
   });
 });
-router.get("/admin", ensureAuthenticated, (req, res) => {
 
+router.get("/admin", ensureAuthenticated, (req, res) => {
   res.render("admin", {
     user: req.user,
     sessionList: memory.sessions,
-    sessionID: req.sessionID,
-    userID: req.session.passport.user
   });
 });
-router.get("/revoke", (req, res) => {
+
+router.get("/revoke", ensureAuthenticated, (req, res) => {
   memory.sessions.destroy(req.query.sid,(err)=>{
     console.log(err);
   })

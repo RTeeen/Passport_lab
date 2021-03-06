@@ -16,7 +16,6 @@ passport.use(new GitHubStrategy({
 function(accessToken, refreshToken, profile, done) {
   // asynchronous verification, for effect...
   process.nextTick(function () { 
-    console.log(profile);
     let userExist = false;
 
     userModel.database.forEach((user)=>{
@@ -41,7 +40,8 @@ function(accessToken, refreshToken, profile, done) {
         }
       );
     console.log(`Your temperoary password is: ${initialPass}. Please login to change it!`);
-    console.log(userModel.database)
+
+    // GitHub user now has local credentials
   
     return done(null, profile);
     }
@@ -57,15 +57,11 @@ router.post(
   "/login",
   passport.authenticate("local", { failureRedirect: '/login' }),
   function(req, res) {
-    req.session.save(function(err) {
-      console.log('saved?!');
-      if(userController.checkAdmin(req.body.email,req.body.password) == "true"){
+      if(userController.checkAdmin(req.body.email,req.body.password) == true){
         res.redirect('/admin');
-      }else if(userController.checkAdmin(req.body.email,req.body.password) == "false"){
+      }else if(userController.checkAdmin(req.body.email,req.body.password) == false){
         res.redirect('/dashboard');
       }
-    });
-    
   }
 );
 router.get('/github', passport.authenticate('github', { scope: [ 'user:email' ] }));
@@ -78,11 +74,7 @@ router.get("/logout", (req, res) => {
 router.get('/gitcallback', 
 passport.authenticate('github', { failureRedirect: '/login' }),
 function(req, res) {
-  req.session.save(function(err) {
-    console.log('saved?!');
     res.redirect('/dashboard');
-  });
-  
 });
 
 
